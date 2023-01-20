@@ -70,7 +70,7 @@ class QuickSort:
         if first >= last:
             return self.arr
         pivotIndex = self.partition(first, last)
-        print(self.arr)
+        # print(self.arr)
         self.sort_helper(first, pivotIndex - 1)
         self.sort_helper(pivotIndex + 1, last)
         return self.arr
@@ -80,5 +80,4 @@ class QuickSort:
         Recursively sorts the list using the partition
         :return self.arr: arr (sorted list)
         """
-
         return self.sort_helper(0, len(self.arr) - 1)

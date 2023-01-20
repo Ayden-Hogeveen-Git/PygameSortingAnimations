@@ -19,9 +19,11 @@ class Main:
     """
     def __init__(self):
         self.running = True
+        self.scene = 0
+        self.val = 1
 
         # ---- Array Values ---- #
-        self.amount = 10
+        self.amount = 800
         self.min = 0
         self.max = self.amount + 1
 
@@ -31,9 +33,9 @@ class Main:
 
         # ---- Algorithms ---- #
         self.qSort = QuickSort(self.arr)
-        self.mSort = MergeSort()
+        self.mSort = MergeSort(self.arr)
 
-        self.algorithm = self.qSort
+        self.algorithm = self.mSort
 
         # ---- Colours ---- #
         self.white = (255, 255, 255)
@@ -43,6 +45,8 @@ class Main:
         self.dark_grey = (40, 40, 40)
 
         self.black = (0, 0, 0)
+
+        self.purple = (60, 5, 135)
 
     def createArr(self):
         """
@@ -65,16 +69,22 @@ class Main:
             pygame.draw.rect(screen, self.white, (i * self.lineWidth, h - (self.arr[i] * h // self.max),
                                                   self.lineWidth, self.arr[i] * h // self.max))
 
-    def draw(self):
+    def drawTitleScene(self):
         """
-        Draws graphics to the screen, updates the screen
+        Draws the first scene, where user can choose settings
+        - amount
+        - type of sort
+        :return: None
+        """
+        screen.fill(self.purple)
+
+    def drawSorting(self):
+        """
+        Draws sorting scene to the screen
         :return: None
         """
         screen.fill(self.dark_grey)
         self.drawLines()
-
-        pygame.display.update()
-        clock.tick(fps)
 
     def reset(self):
         """
@@ -88,9 +98,11 @@ class Main:
         Main driver of the code, brings everything together
         :return: None
         """
-
         while self.running:
-            self.draw()
+            if self.scene == 0:
+                self.drawTitleScene()
+            elif self.scene == 1:
+                self.drawSorting()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -101,12 +113,18 @@ class Main:
                         self.running = False
 
                     # ---- Sort, then redraw lines ---- #
-                    if event.key == pygame.K_RETURN:
-                        self.algorithm.sort()
+                    if event.key == pygame.K_RETURN and self.scene == 1:
+                        self.arr = self.algorithm.sort()
                         self.drawLines()
 
                     # ---- Restart Program ---- #
                     if event.key == pygame.K_r:
-                        self.reset()
+                        self.reset()  # does not reset the sorting at the moment
 
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    self.scene += self.val
+                    self.val *= -1
+
+            pygame.display.update()
+            clock.tick(fps)
         pygame.quit()
