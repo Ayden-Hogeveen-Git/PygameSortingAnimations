@@ -30,10 +30,10 @@ class Main:
         self.arr = self.createArr()
 
         # ---- Algorithms ---- #
-        self.qSort = QuickSort()
+        self.qSort = QuickSort(self.arr)
         self.mSort = MergeSort()
 
-        self.algorithm = self.mSort
+        self.algorithm = self.qSort
 
         # ---- Colours ---- #
         self.white = (255, 255, 255)
@@ -76,6 +76,13 @@ class Main:
         pygame.display.update()
         clock.tick(fps)
 
+    def reset(self):
+        """
+        Resets the array and gui to be sorted again
+        :return: None
+        """
+        self.arr = self.createArr()
+
     def run(self):
         """
         Main driver of the code, brings everything together
@@ -92,5 +99,14 @@ class Main:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.running = False
+
+                    # ---- Sort, then redraw lines ---- #
+                    if event.key == pygame.K_RETURN:
+                        self.algorithm.sort()
+                        self.drawLines()
+
+                    # ---- Restart Program ---- #
+                    if event.key == pygame.K_r:
+                        self.reset()
 
         pygame.quit()
